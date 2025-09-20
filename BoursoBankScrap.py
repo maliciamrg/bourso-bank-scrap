@@ -346,5 +346,6 @@ if __name__ == "__main__":
             except ValueError:
                 print("Invalid date format in save file")
 
-    main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], prev_date)
+    flag = sys.argv[1].lower() in ("true", "1", "yes")
+    main(flag, sys.argv[2], sys.argv[3], sys.argv[4], prev_date)
 

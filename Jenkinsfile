@@ -11,12 +11,22 @@ pipeline {
             }
         }
 
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+        python3 -m venv venv
+        venv/bin/pip install --upgrade pip
+        venv/bin/pip install -r requirements.txt
+        '''
+            }
+        }
+
         stage('Get Version from Python Script') {
             steps {
                 script {
                     // Extract __version__ using python -c
                     IMAGE_TAG = sh(
-                            script: "python3 -c 'from BoursoBankScrap import __version__; print(__version__)'",
+                            script: "venv/bin/python3 -c 'from BoursoBankScrap import __version__; print(__version__)'",
                             returnStdout: true
                     ).trim()
                     echo "Using Docker image tag: ${IMAGE_TAG}"
