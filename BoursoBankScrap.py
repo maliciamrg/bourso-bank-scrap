@@ -316,6 +316,7 @@ def main(dry_run, client_number,numeric_password,account,from_date):
 
 if __name__ == "__main__":
     print(f"Running version {__version__}")
+    print(f"Run on: {datetime.fromisoformat(datetime.today())}")
     print("Current working directory:", os.getcwd())
     print("Script directory:", os.path.dirname(os.path.abspath(__file__)))
 
