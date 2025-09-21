@@ -316,6 +316,8 @@ def main(dry_run, client_number,numeric_password,account,from_date):
 
 if __name__ == "__main__":
     print(f"Running version {__version__}")
+    print("Current working directory:", os.getcwd())
+    print("Script directory:", os.path.dirname(os.path.abspath(__file__)))
 
     # sys.argv[0] is the script name, so parameters start at index 1
     if len(sys.argv) != 5:
