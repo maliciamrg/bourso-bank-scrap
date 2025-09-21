@@ -314,32 +314,19 @@ def main(dry_run, client_number,numeric_password,account,from_date):
     with open(SAVE_FILE, "w") as f:
         f.write(datetime.today().isoformat())
 
-if __name__ == "__main__":
-    print(f"Running version {__version__}")
-    print(f"Run on: {datetime.fromisoformat(datetime.today())}")
-    print("Current working directory:", os.getcwd())
-    print("Script directory:", os.path.dirname(os.path.abspath(__file__)))
 
-    # sys.argv[0] is the script name, so parameters start at index 1
-    if len(sys.argv) != 5:
-        print(f"Usage: python {sys.argv[0]} dry_run client_number numeric_password account")
-        sys.exit(1)
-
-    #
-    prev_date = datetime.today() - timedelta(days=30)
-
+def retrieve_prev_date():
+    return_prev_date = datetime.today() - timedelta(days=30)
     # Create folder if it doesn't exist
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-
     if os.path.exists(SAVE_FILE):
         # Read previous date
         with open(SAVE_FILE, "r") as f:
             prev_str = f.read().strip()
             try:
-                prev_date = datetime.fromisoformat(prev_str)
-                diff = datetime.today() - prev_date
-                print(f"Last run was on: {prev_date}")
-                print(f"Time since last run: {diff}")
+                return_prev_date = datetime.fromisoformat(prev_str)
+                diff = datetime.today() - return_prev_date
+                print(f"Last run was on: {return_prev_date}")
 
                 # Stop if diff is less than 25 days
                 if diff.days < 30:
@@ -348,7 +335,21 @@ if __name__ == "__main__":
 
             except ValueError:
                 print("Invalid date format in save file")
+    return return_prev_date
 
+if __name__ == "__main__":
+    print(f"Running version {__version__}")
+    print(f"Run on: {datetime.today().isoformat()}")
+    print("Current working directory:", os.getcwd())
+    print("Script directory:", os.path.dirname(os.path.abspath(__file__)))
+
+    # sys.argv[0] is the script name, so parameters start at index 1
+    if len(sys.argv) != 5:
+        print(f"Usage: python {sys.argv[0]} dry_run client_number numeric_password account")
+        sys.exit(1)
+
+    prev_date = retrieve_prev_date()
     flag = sys.argv[1].lower() in ("true", "1", "yes")
+
     main(flag, sys.argv[2], sys.argv[3], sys.argv[4], prev_date)
 
