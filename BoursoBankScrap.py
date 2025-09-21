@@ -85,7 +85,7 @@ def build_encoded_password(numeric_password: str, digit_to_group: dict):
     return "|".join(groups)
 
 # ---------- Main flow ----------
-def main(dry_run, client_number,numeric_password,account,from_date):
+def main(dry_run, client_number,numeric_password,account,from_date,discord_hook):
     # User inputs
     #client_number = input("Client number (digits): ").strip()
 
@@ -309,6 +309,7 @@ def main(dry_run, client_number,numeric_password,account,from_date):
 
     df.to_csv(outfn_path, index=False)
     print(f"Saved CSV to {outfn_path}")
+    send_discord_message(discord_hook,f"Saved CSV to {outfn_path}")
 
     # Save current date for next time
     with open(SAVE_FILE, "w") as f:
@@ -337,19 +338,32 @@ def retrieve_prev_date():
                 print("Invalid date format in save file")
     return return_prev_date
 
+def send_discord_message(webhook_url, content: str):
+    if not webhook_url:  # test if webhook is empty
+        print("⚠️ Discord webhook URL is empty, skipping notification.")
+        return
+
+    data = {"content": content}
+    try:
+        response = requests.post(webhook_url, json=data)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to send Discord message: {e}")
+
 if __name__ == "__main__":
+    print('-------------------------------------------------------------------------------------------')
     print(f"Running version {__version__}")
     print(f"Run on: {datetime.today().isoformat()}")
     print("Current working directory:", os.getcwd())
     print("Script directory:", os.path.dirname(os.path.abspath(__file__)))
 
     # sys.argv[0] is the script name, so parameters start at index 1
-    if len(sys.argv) != 5:
+    if len(sys.argv) != 6:
         print(f"Usage: python {sys.argv[0]} dry_run client_number numeric_password account")
         sys.exit(1)
 
     prev_date = retrieve_prev_date()
     flag = sys.argv[1].lower() in ("true", "1", "yes")
 
-    main(flag, sys.argv[2], sys.argv[3], sys.argv[4], prev_date)
+    main(flag, sys.argv[2], sys.argv[3], sys.argv[4], prev_date, sys.argv[5])
 
