@@ -2,7 +2,7 @@
 set -e
 
 # Write the cron job using env vars
-echo "$CRON_SCHEDULE /bin/sh -c 'python /app/script.py \"$PARAM1\" \"$PARAM2\" \"$PARAM3\" \"$PARAM4\" >> /var/log/cron.log 2>&1'" > /etc/cron.d/my-cron
+echo "$CRON_SCHEDULE /bin/sh -c '/usr/local/bin/python /app/script.py \"$PARAM1\" \"$PARAM2\" \"$PARAM3\" \"$PARAM4\" >> /var/log/cron.log 2>&1'" > /etc/cron.d/my-cron
 
 # Apply cron job
 crontab /etc/cron.d/my-cron
