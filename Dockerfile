@@ -12,7 +12,8 @@ ENV PARAM1=true \
     PARAM3=12345678 \
     PARAM4=fake_account \
     CRON_SCHEDULE="0 2 * * *" \
-    DISCORDHOOK=""
+    DISCORDHOOK="" \
+    NB_DAYS=30
 
 # dependencies:
 COPY requirements.txt .

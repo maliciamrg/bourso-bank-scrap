@@ -316,8 +316,8 @@ def main(dry_run, client_number,numeric_password,account,from_date,discord_hook)
         f.write(datetime.today().isoformat())
 
 
-def retrieve_prev_date():
-    return_prev_date = datetime.today() - timedelta(days=30)
+def retrieve_prev_date(nb_days):
+    return_prev_date = datetime.today() - timedelta(days=nb_days)
     # Create folder if it doesn't exist
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
     if os.path.exists(SAVE_FILE):
@@ -330,7 +330,7 @@ def retrieve_prev_date():
                 print(f"Last run was on: {return_prev_date}")
 
                 # Stop if diff is less than 25 days
-                if diff.days < 30:
+                if diff.days < nb_days:
                     print("⏹ Stopping: less than 30 days since last run.")
                     sys.exit(0)
 
@@ -358,11 +358,11 @@ if __name__ == "__main__":
     print("Script directory:", os.path.dirname(os.path.abspath(__file__)))
 
     # sys.argv[0] is the script name, so parameters start at index 1
-    if len(sys.argv) != 6:
-        print(f"Usage: python {sys.argv[0]} dry_run client_number numeric_password account")
+    if len(sys.argv) != 7:
+        print(f"Usage: python {sys.argv[0]} dry_run client_number numeric_password account nb_day")
         sys.exit(1)
 
-    prev_date = retrieve_prev_date()
+    prev_date = retrieve_prev_date(sys.argv[6])
     flag = sys.argv[1].lower() in ("true", "1", "yes")
 
     main(flag, sys.argv[2], sys.argv[3], sys.argv[4], prev_date, sys.argv[5])
