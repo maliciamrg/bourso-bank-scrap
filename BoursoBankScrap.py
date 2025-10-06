@@ -317,7 +317,11 @@ def main(dry_run, client_number,numeric_password,account,from_date,discord_hook)
 
 
 def retrieve_prev_date(nb_days):
-    return_prev_date = datetime.today() - timedelta(days=nb_days)
+    try:
+        nb_day = int(nb_days)
+    except ValueError:
+        raise ValueError(f"Invalid number of days: {nb_days}")
+    return_prev_date = datetime.today() - timedelta(days=nb_day)
     # Create folder if it doesn't exist
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
     if os.path.exists(SAVE_FILE):
@@ -330,7 +334,7 @@ def retrieve_prev_date(nb_days):
                 print(f"Last run was on: {return_prev_date}")
 
                 # Stop if diff is less than 25 days
-                if diff.days < nb_days:
+                if diff.days < nb_day:
                     print("⏹ Stopping: less than 30 days since last run.")
                     sys.exit(0)
 
